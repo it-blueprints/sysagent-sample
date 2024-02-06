@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: batch-service
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://root:root@localhost:27017/batch?authSource=admin&retryWrites=false}
+      #uri: ${MONGODB_URI:mongodb://localhost:27017/batch}
+      option:
+        max-wait-time: 180000
+        socket-keep-alive: true
+        min-heartbeat-frequency: 10000
+server:
+  port: ${PORT:8080}
+  servlet:
+    context-path: /batch-service/api/v1
+
+logging.level:
+  root: ERROR
+  com.itblueprints: DEBUG
+  uk.gov.dwp.payments: DEBUG
+
+com.itblueprints.sysagent:
+  heart-beat-secs: 5
+  manager-does-work: true
+  worker-capacity-factor: 10
+
+app:
+  out-folder: ${OUT_FOLDER:/Users/nilanjan.biswas/junk}

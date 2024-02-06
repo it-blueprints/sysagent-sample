@@ -1,0 +1,69 @@
+version: '3.7'
+# Services
+services:
+  server1:
+    container_name: server1
+    image: itblueprints/system-agent-sample:latest
+    ports:
+      - 9011:8080
+    networks:
+      - cluster-network
+    depends_on:
+      - mongodb
+    environment:
+      - MONGODB_URI=mongodb://root:root@mongodb:27017/batch?authSource=admin&retryWrites=false
+      - OUT_FOLDER=/out
+    volumes:
+      - /Users/nilanjan.biswas/junk:/out
+
+  server2:
+    container_name: server2
+    image: itblueprints/system-agent-sample:latest
+    ports:
+      - 9012:8080
+    networks:
+      - cluster-network
+    depends_on:
+      - mongodb
+    environment:
+      - MONGODB_URI=mongodb://root:root@mongodb:27017/batch?authSource=admin&retryWrites=false
+      - OUT_FOLDER=/out
+    volumes:
+      - /Users/nilanjan.biswas/junk:/out
+
+  server3:
+    container_name: server3
+    image: itblueprints/system-agent-sample:latest
+    ports:
+      - 9013:8080
+    networks:
+      - cluster-network
+    depends_on:
+      - mongodb
+    environment:
+      - MONGODB_URI=mongodb://root:root@mongodb:27017/batch?authSource=admin&retryWrites=false
+      - OUT_FOLDER=/out
+    volumes:
+      - /Users/nilanjan.biswas/junk:/out
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - cluster-network
+
+# Named volumes
+volumes:
+  mongodb_data:
+
+# Named networks
+networks:
+  cluster-network:
+    driver: bridge
