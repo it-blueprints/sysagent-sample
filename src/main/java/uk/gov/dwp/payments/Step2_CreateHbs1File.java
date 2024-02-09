@@ -1,6 +1,7 @@
 package uk.gov.dwp.payments;
 
-import com.itblueprints.sysagent.Arguments;
+import com.itblueprints.sysagent.job.JobArguments;
+import com.itblueprints.sysagent.step.Partition;
 import com.itblueprints.sysagent.step.PartitionedStep;
 import com.itblueprints.sysagent.step.StepContext;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +28,10 @@ public class Step2_CreateHbs1File implements PartitionedStep {
 
     //---------------------------------------------------------------
     @Override
-    public List<Arguments> getPartitionArgumentsList(Arguments jobArguments) {
-        val partitions = new ArrayList<Arguments>();
+    public List<Partition> getPartitions(JobArguments jobArguments) {
+        val partitions = new ArrayList<Partition>();
         for(val custProfile: List.of("resident_GB", "resident_NI")) {
-            val part = new Arguments();
+            val part = new Partition();
             part.put("custProfile", custProfile);
             partitions.add(part);
         }
@@ -40,10 +41,11 @@ public class Step2_CreateHbs1File implements PartitionedStep {
     //---------------------------------------------------------------
     @Override
     public void run(StepContext context) {
-        val args = context.getArguments();
+        val args = context.getJobArguments();
         val pmtProfile = args.getString("pmtProfile");
-        val custProfile = args.getString("custProfile");
         val runAt = args.getTime("jobStartedAt");
+        val custProfile = context.getPartition().getString("custProfile");
+
         val fileName = pmtProfile+"_"+custProfile+"_"+runAt.format(formatter)+".txt";
 
         try {

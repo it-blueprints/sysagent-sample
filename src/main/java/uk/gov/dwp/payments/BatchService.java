@@ -1,6 +1,5 @@
 package uk.gov.dwp.payments;
 
-import com.itblueprints.sysagent.Arguments;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Component;

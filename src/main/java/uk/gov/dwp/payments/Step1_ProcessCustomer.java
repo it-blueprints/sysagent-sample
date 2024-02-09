@@ -1,9 +1,9 @@
 package uk.gov.dwp.payments;
 
-import com.itblueprints.sysagent.Arguments;
+import com.itblueprints.sysagent.job.JobArguments;
 import com.itblueprints.sysagent.step.BatchStepContext;
+import com.itblueprints.sysagent.step.Partition;
 import com.itblueprints.sysagent.step.PartitionedBatchStep;
-import com.itblueprints.sysagent.step.StepContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -25,12 +25,12 @@ public class Step1_ProcessCustomer implements PartitionedBatchStep<BenefitPaymen
 
     //---------------------------------------------------------------
     @Override
-    public List<Arguments> getPartitionArgumentsList(Arguments jobArgs) {
+    public List<Partition> getPartitions(JobArguments jobArgs) {
         log.info("Getting paritions");
-        val partitionArgs = new ArrayList<Arguments>();
+        val partitionArgs = new ArrayList<Partition>();
         for(val custProfile: List.of("resident_GB", "resident_NI")) {
             for(int i = 1; i < 6; i++){
-                val part = new Arguments();
+                val part = new Partition();
                 part.put("custProfile", custProfile);
                 part.put("partition", i);
                 partitionArgs.add(part);
@@ -42,9 +42,9 @@ public class Step1_ProcessCustomer implements PartitionedBatchStep<BenefitPaymen
     //------------------------------------------------------------
     @Override
     public Page<BenefitPayment> readPageOfItems(Pageable pgRequest, BatchStepContext context) {
-        log.info("Executing readChunkOfItems for page="+pgRequest.getPageNumber()+" with arguments "+context.getArguments());
-        val custProf = context.getArguments().getString("custProfile");
-        val prtn = context.getArguments().getInt("partition");
+        log.info("Executing readChunkOfItems for page="+pgRequest.getPageNumber());
+        val custProf = context.getJobArguments().getString("custProfile");
+        val prtn = context.getPartition().getInt("partition");
         val result = benefitPaymentRepo.findForPartition(custProf, prtn, pgRequest);
         return result;
     }

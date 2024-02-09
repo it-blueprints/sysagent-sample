@@ -1,11 +1,9 @@
 package uk.gov.dwp.payments;
 
-import com.itblueprints.sysagent.Arguments;
-import com.itblueprints.sysagent.job.Job;
+import com.itblueprints.sysagent.job.JobArguments;
 import com.itblueprints.sysagent.job.JobPipeline;
 import com.itblueprints.sysagent.scheduling.ScheduledJob;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,7 +22,7 @@ public class ProcessPaymentsJob implements ScheduledJob {
     }
 
     @Override
-    public void onStart(Arguments jobArguments) {
+    public void onStart(JobArguments jobArguments) {
         jobArguments.put("pmtProfile", "state_pension");
     }
 
