@@ -27,25 +27,25 @@ public class Step1_ProcessCustomer implements PartitionedBatchStep<BenefitPaymen
     @Override
     public List<Partition> getPartitions(JobArguments jobArgs) {
         log.info("Getting paritions");
-        val partitionArgs = new ArrayList<Partition>();
+        val partitions = new ArrayList<Partition>();
         for(val custProfile: List.of("resident_GB", "resident_NI")) {
             for(int i = 1; i < 6; i++){
                 val part = new Partition();
                 part.put("custProfile", custProfile);
-                part.put("partition", i);
-                partitionArgs.add(part);
+                part.put("ninoPartition", i);
+                partitions.add(part);
             }
         }
-        return partitionArgs;
+        return partitions;
     }
 
     //------------------------------------------------------------
     @Override
     public Page<BenefitPayment> readPageOfItems(Pageable pgRequest, BatchStepContext context) {
         log.info("Executing readChunkOfItems for page="+pgRequest.getPageNumber());
-        val custProf = context.getJobArguments().getString("custProfile");
-        val prtn = context.getPartition().getInt("partition");
-        val result = benefitPaymentRepo.findForPartition(custProf, prtn, pgRequest);
+        val custProf = context.getPartition().getString("custProfile");
+        val ninoPrtn = context.getPartition().getInt("ninoPartition");
+        val result = benefitPaymentRepo.findForPartition(custProf, ninoPrtn, pgRequest);
         return result;
     }
 
