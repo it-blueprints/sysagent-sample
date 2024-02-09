@@ -66,7 +66,7 @@ public class Step1_ProcessCustomer implements PartitionedBatchStep<BenefitPaymen
     //---------------------------------------------------------------
     @Override
     public void writePageOfItems(Page<Result> page, BatchStepContext context) {
-        log.info("Executing writeChunkOfItems for page="+page.getNumber());
+        log.info("Executing writePageOfItems for page="+page.getNumber());
         val pmts = page.stream().map(r -> r.benefitPayment).collect(Collectors.toList());
         val clnLines = page.stream().map(r -> r.clnLine).collect(Collectors.toList());
         benefitPaymentRepo.saveAll(pmts);
