@@ -3,8 +3,8 @@ spring:
     name: batch-service
   data:
     mongodb:
-      uri: ${MONGODB_URI:mongodb://root:root@localhost:27017/batch?authSource=admin&retryWrites=false}
-      #uri: ${MONGODB_URI:mongodb://localhost:27017/batch}
+      #uri: ${MONGODB_URI:mongodb://root:root@localhost:27017/batch?authSource=admin&retryWrites=false}
+      uri: ${MONGODB_URI:mongodb://localhost:27017/batch}
       option:
         max-wait-time: 180000
         socket-keep-alive: true
@@ -21,8 +21,8 @@ logging.level:
 
 com.itblueprints.sysagent:
   heart-beat-secs: 5
-  manager-does-work: true
-  worker-capacity-factor: 10
+  worker-threads: 5
+  batch-page-size: 500
 
 app:
   out-folder: ${OUT_FOLDER:/Users/nilanjan.biswas/junk}
