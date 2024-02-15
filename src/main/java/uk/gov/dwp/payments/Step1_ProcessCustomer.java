@@ -1,9 +1,9 @@
 package uk.gov.dwp.payments;
 
 import com.itblueprints.sysagent.job.JobArguments;
-import com.itblueprints.sysagent.step.BatchStepContext;
 import com.itblueprints.sysagent.step.Partition;
 import com.itblueprints.sysagent.step.PartitionedBatchStep;
+import com.itblueprints.sysagent.step.StepContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -41,17 +41,17 @@ public class Step1_ProcessCustomer implements PartitionedBatchStep<BenefitPaymen
 
     //------------------------------------------------------------
     @Override
-    public Page<BenefitPayment> readPageOfItems(Pageable pgRequest, BatchStepContext context) {
+    public Page<BenefitPayment> readPageOfItems(Pageable pgRequest, StepContext context) {
         log.info("Executing readChunkOfItems for page="+pgRequest.getPageNumber());
-        val custProf = context.getPartition().getString("custProfile");
-        val ninoPrtn = context.getPartition().getInt("ninoPartition");
+        val custProf = context.getString("custProfile");
+        val ninoPrtn = context.getInt("ninoPartition");
         val result = benefitPaymentRepo.findForPartition(custProf, ninoPrtn, pgRequest);
         return result;
     }
 
     //------------------------------------------------------------------------------
     @Override
-    public Step1_ProcessCustomer.Result processItem(BenefitPayment item, BatchStepContext context) {
+    public Step1_ProcessCustomer.Result processItem(BenefitPayment item, StepContext context) {
         //log.info("Processing item");
         val cln = new ClnLine();
         cln.setFullData(item.getSeq()+", "+item.getCustProfile()+", "+item.getPartition()+", "+item.getData1()+" "+item.getData2());
@@ -65,7 +65,7 @@ public class Step1_ProcessCustomer implements PartitionedBatchStep<BenefitPaymen
 
     //---------------------------------------------------------------
     @Override
-    public void writePageOfItems(Page<Result> page, BatchStepContext context) {
+    public void writePageOfItems(Page<Result> page, StepContext context) {
         log.info("Executing writePageOfItems for page="+page.getNumber());
         val pmts = page.stream().map(r -> r.benefitPayment).collect(Collectors.toList());
         val clnLines = page.stream().map(r -> r.clnLine).collect(Collectors.toList());

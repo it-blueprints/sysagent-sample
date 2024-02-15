@@ -2,7 +2,7 @@ package uk.gov.dwp.payments;
 
 import com.itblueprints.sysagent.job.JobArguments;
 import com.itblueprints.sysagent.job.JobPipeline;
-import com.itblueprints.sysagent.scheduling.ScheduledJob;
+import com.itblueprints.sysagent.job.ScheduledJob;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

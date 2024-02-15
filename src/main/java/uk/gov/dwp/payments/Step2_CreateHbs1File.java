@@ -41,10 +41,9 @@ public class Step2_CreateHbs1File implements PartitionedStep {
     //---------------------------------------------------------------
     @Override
     public void run(StepContext context) {
-        val args = context.getJobArguments();
-        val pmtProfile = args.getString("pmtProfile");
-        val runAt = args.getTime("jobStartedAt");
-        val custProfile = context.getPartition().getString("custProfile");
+        val pmtProfile = context.getString("pmtProfile");
+        val runAt = context.getTime("jobStartedAt");
+        val custProfile = context.getString("custProfile");
 
         val fileName = pmtProfile+"_"+custProfile+"_"+runAt.format(formatter)+".txt";
 
