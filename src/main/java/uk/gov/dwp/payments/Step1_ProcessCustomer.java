@@ -30,9 +30,7 @@ public class Step1_ProcessCustomer implements PartitionedBatchStep<BenefitPaymen
         val partitions = new ArrayList<Partition>();
         for(val custProfile: List.of("resident_GB", "resident_NI")) {
             for(int i = 1; i < 6; i++){
-                val part = new Partition();
-                part.put("custProfile", custProfile);
-                part.put("ninoPartition", i);
+                val part = Partition.of("custProfile", custProfile, "ninoPartition", i);
                 partitions.add(part);
             }
         }

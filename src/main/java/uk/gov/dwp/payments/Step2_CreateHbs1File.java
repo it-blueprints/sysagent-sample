@@ -32,8 +32,7 @@ public class Step2_CreateHbs1File implements PartitionedStep {
     public List<Partition> getPartitions(JobArguments jobArguments) {
         val partitions = new ArrayList<Partition>();
         for(val custProfile: List.of("resident_GB", "resident_NI")) {
-            val part = new Partition();
-            part.put("custProfile", custProfile);
+            val part = Partition.of("custProfile", custProfile);
             partitions.add(part);
         }
         return partitions;
